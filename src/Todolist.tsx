@@ -1,6 +1,7 @@
 import React, {ChangeEvent} from 'react';
 import {FilterValuesType} from './App';
 import {AddItemForm} from "./components/AddItemForm/AddItemForm";
+import {EditableSpan} from "./components/EditableSpan";
 
 export type TaskType = {
     id: string
@@ -18,12 +19,14 @@ type PropsType = {
     changeTaskStatus: (id: string, isDone: boolean, todolistId: string) => void
     removeTodolist: (id: string) => void
     filter: FilterValuesType
+    changeTitle: (id: string, title: string, todolistId: string)=> void
 }
 
 export function Todolist(props: PropsType) {
 
     const removeTodolist = () => props.removeTodolist(props.id)
-    const addTask = (title:string) => {
+
+    const addTask = (title: string) => {
         props.addTask(title, props.id)
     }
 
@@ -35,7 +38,7 @@ export function Todolist(props: PropsType) {
         <h3> {props.title}
             <button onClick={removeTodolist}>x</button>
         </h3>
-        <AddItemForm addItem={addTask} />
+        <AddItemForm addItem={addTask}/>
         <ul>
             {
                 props.tasks.map(t => {
@@ -45,9 +48,14 @@ export function Todolist(props: PropsType) {
                         props.changeTaskStatus(t.id, newIsDoneValue, props.id);
                     }
 
+                    const changeTaskTitle = (title:string) =>{
+                        props.changeTitle(t.id, title, props.id)
+
+                    }
+
                     return <li key={t.id} className={t.isDone ? "is-done" : ""}>
                         <input type="checkbox" onChange={onChangeHandler} checked={t.isDone}/>
-                        <EditableSpan title={t.title} />
+                        <EditableSpan title={t.title} changeTitle={changeTaskTitle}/>
                         <button onClick={onClickHandler}>x</button>
                     </li>
                 })
@@ -67,10 +75,3 @@ export function Todolist(props: PropsType) {
     </div>
 }
 
-type EditableSpanType = {
-    title:string
-}
-
-const EditableSpan = (props: EditableSpanType)=>{
-    return <span>{props.title}</span>
-}
