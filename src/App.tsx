@@ -84,7 +84,6 @@ function App() {
     function changeTodoListTitle(title: string, todolistId: string) {
         let todolist = todolists.find(t => t.id === todolistId)
 
-
         if (todolist){
             todolist.title = title
             setTodolists([...todolists])
